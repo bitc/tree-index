@@ -3,15 +3,6 @@
 
 #include "MultiTrie.hpp"
 
-UString createUString(const std::string& str)
-{
-    UString result;
-    for(std::string::const_iterator i = str.begin(); i != str.end(); ++i)
-        result.push_back(*i);
-    //std::copy(str.begin(), str.end(), result.begin());
-    return result;
-}
-
 MultiTrie::MultiTrie()
 {
 }

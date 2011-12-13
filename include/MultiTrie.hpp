@@ -6,11 +6,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-typedef unsigned int UChar;
-typedef std::basic_string<UChar> UString;
-typedef unsigned long DocId;
-
-UString createUString(const std::string& str);
+#include "Misc.hpp"
 
 class MultiTrie
 {
@@ -68,4 +64,3 @@ class MultiTrie
 };
 
 #endif
-

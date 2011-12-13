@@ -4,11 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "Misc.hpp"
 #include "MultiTrie.hpp"
-
-typedef unsigned int UChar;
-typedef std::basic_string<UChar> UString;
-typedef unsigned long DocId;
 
 class Index
 {
