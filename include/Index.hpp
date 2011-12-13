@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "MultiTrie.hpp"
+
 typedef unsigned int UChar;
 typedef std::basic_string<UChar> UString;
 typedef unsigned long DocId;
@@ -21,6 +23,9 @@ class Index
         std::vector<UString> getTerms(const UString& prefix) const;
 
         void flush();
+
+    private:
+        MultiTrie multiTrie;
 };
 
 #endif

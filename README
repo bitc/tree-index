@@ -1,0 +1,42 @@
+
+On disk format
+
+
+struct child
+{
+	uint32 char;
+	uint32 offset;
+};
+
+struct node
+{
+	uint32 numValues;
+	uint32[] values;
+	uint16 numChildren
+	child[] children;
+};
+
+The file is a sequence of nodes
+
+
+Example:
+
+A tree with:
+the word "a" mapping to the value 1
+the word "at" mapping to multiple values [1, 2]
+
+
+---------------------------------------------------|------
+| Num     | Num      | First   | Offset   | Num    |
+| Values  | Children | Child   | to child | values |
+| of root | of root  | of root | node     | of "a" |
+| node    | node     | node    |          | node   |
+|---------|----------|---------|----------|--------|------
+|       0 |        1 | 'a'     | 0        | 1      |   ...
+|---------|----------|---------|----------|--------|------
+
+0         4          6         10         14       18
+
+                                 |        ^
+                                 |        |
+                                 \--------/
