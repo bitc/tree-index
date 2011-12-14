@@ -57,6 +57,7 @@ void FileMultiTrie::WriteNode(const MultiTrie::Node& node, FILE* fp)
     }
 
     // Write Children header
+    // TODO Check for integer overflow here
     NumChildrenHeader numChildren = node.children.size();
     fwrite(&numChildren, sizeof(numChildren), 1, fp);
 
