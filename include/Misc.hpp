@@ -1,9 +1,11 @@
 #ifndef MISC_HPP_
 #define MISC_HPP_
 
-typedef unsigned int UChar;
+#include <boost/cstdint.hpp>
+
+typedef boost::uint32_t UChar;
 typedef std::basic_string<UChar> UString;
-typedef unsigned long DocId;
+typedef boost::uint32_t DocId;
 
 static UString createUString(const std::string& str)
 {

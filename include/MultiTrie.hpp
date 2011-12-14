@@ -61,6 +61,8 @@ class MultiTrie
         static void debugDump(const Node* n, const std::string& prefix);
 
         Node root;
+
+        friend class FileMultiTrie;
 };
 
 #endif

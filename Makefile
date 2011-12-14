@@ -6,7 +6,7 @@
 
 PROGRAM = Main
 
-SRCS = Index.cpp MultiTrie.cpp Test.cpp
+SRCS = Index.cpp MultiTrie.cpp FileMultiTrie.cpp Test.cpp
 
 # Compiler flags:
 
