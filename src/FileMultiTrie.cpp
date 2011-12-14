@@ -19,6 +19,12 @@ size_t FileMultiTrie::NodeBlockSize(const MultiTrie::Node& node)
     size += node.values.size() * sizeof(ValueElem);
     size += sizeof(NumChildrenHeader);
     size += node.children.size() * (sizeof(UChar) + sizeof(Offset));
+
+    for(std::vector<MultiTrie::Child>::const_iterator i = node.children.begin(); i != node.children.end(); ++i)
+    {
+        size += NodeBlockSize(*i->child);
+    }
+
     return size;
 }
 
@@ -60,7 +66,9 @@ void FileMultiTrie::WriteNode(const MultiTrie::Node& node, FILE* fp)
         UChar c = i->c;
         fwrite(&c, sizeof(c), 1, fp);
         fwrite(&offset, sizeof(offset), 1, fp);
-        offset += NodeBlockSize(*i->child);
+        // Offset needs to go backwards one child element
+        offset += NodeBlockSize(*i->child) - (sizeof(UChar) + sizeof(Offset));
+
     }
 
     for(std::vector<MultiTrie::Child>::const_iterator i = node.children.begin(); i != node.children.end(); ++i)
