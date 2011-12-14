@@ -48,13 +48,16 @@ void testStdInput()
     std::vector<std::string> allWords;
 
     std::string word;
+    unsigned int n = 0;
     while(true)
     {
         std::getline(std::cin, word);
         if(std::cin.eof())
             break;
-        trie.add(word, 42);
+        for(unsigned int i = 0; i < n%7+1; ++i)
+            trie.add(word, i);
         allWords.push_back(word);
+        ++n;
     }
 
     std::cout << "Writing to file..." << std::endl;
@@ -63,26 +66,46 @@ void testStdInput()
 
     std::cout << "Checking Memory trie..." << std::endl;
 
+    n = 0;
     for(std::vector<std::string>::const_iterator i = allWords.begin(); i != allWords.end(); ++i)
     {
         std::vector<DocId> docs = trie.getDocIds(createUString(*i));
-        if(docs.size() != 1 || docs[0] != 42)
+
+        if(docs.size() != n%7+1)
         {
             std::cout << "ERROR: " << *i << std::endl;
         }
+        for(unsigned int j = 0; j < n%7+1; ++j)
+        {
+            if(docs[j] != j)
+            {
+                std::cout << "ERROR: " << *i << std::endl;
+            }
+        }
+        ++n;
     }
 
     std::cout << "Checking File trie..." << std::endl;
 
     FileMultiTrie fileTrie("words.trie");
 
+    n = 0;
     for(std::vector<std::string>::const_iterator i = allWords.begin(); i != allWords.end(); ++i)
     {
         std::vector<DocId> docs = fileTrie.getDocIds(createUString(*i));
-        if(docs.size() != 1 || docs[0] != 42)
+
+        if(docs.size() != n%7+1)
         {
             std::cout << "ERROR: " << *i << std::endl;
         }
+        for(unsigned int j = 0; j < n%7+1; ++j)
+        {
+            if(docs[j] != j)
+            {
+                std::cout << "ERROR: " << *i << std::endl;
+            }
+        }
+        ++n;
     }
 
     std::cout << "Done" << std::endl;
