@@ -75,7 +75,7 @@ void testStdInput()
         {
             std::cout << "ERROR: " << *i << std::endl;
         }
-        for(unsigned int j = 0; j < n%7+1; ++j)
+        for(unsigned int j = 0; j < docs.size(); ++j)
         {
             if(docs[j] != j)
             {
@@ -98,7 +98,7 @@ void testStdInput()
         {
             std::cout << "ERROR: " << *i << std::endl;
         }
-        for(unsigned int j = 0; j < n%7+1; ++j)
+        for(unsigned int j = 0; j < docs.size(); ++j)
         {
             if(docs[j] != j)
             {
