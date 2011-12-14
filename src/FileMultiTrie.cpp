@@ -124,6 +124,7 @@ void FileMultiTrie::DebugDumpFile(const std::string& file)
             fread(&offset, sizeof(offset), 1, fp);
             std::cout << offset << std::endl;
         }
+        std::cout << std::endl;
     }
 
     fclose(fp);
