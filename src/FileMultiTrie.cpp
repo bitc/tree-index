@@ -60,10 +60,20 @@ void FileMultiTrie::WriteNode(const MultiTrie::Node& node, FILE* fp)
         UChar c = i->c;
         fwrite(&c, sizeof(c), 1, fp);
         fwrite(&offset, sizeof(offset), 1, fp);
-        offset += NodeBlockSize(*i->child.get());
+        offset += NodeBlockSize(*i->child);
     }
 
-    // TODO recursively write the children nodes
+    for(std::vector<MultiTrie::Child>::const_iterator i = node.children.begin(); i != node.children.end(); ++i)
+    {
+        WriteNode(*i->child, fp);
+    }
+}
+
+static bool ValidHeader(FILE* fp)
+{
+    char header[sizeof(FILE_HEADER)];
+    fread(header, sizeof(header), 1, fp);
+    return strncmp(header, FILE_HEADER, sizeof(header)) == 0;
 }
 
 void FileMultiTrie::DebugDumpFile(const std::string& file)
@@ -72,9 +82,7 @@ void FileMultiTrie::DebugDumpFile(const std::string& file)
 
     FILE* fp = fopen(file.c_str(), "rb");
 
-    char header[sizeof(FILE_HEADER)];
-    fread(header, sizeof(header), 1, fp);
-    if(strncmp(header, FILE_HEADER, sizeof(header)) != 0)
+    if(!ValidHeader(fp))
     {
         std::cout << "Corrupt database: Invalid header" << std::endl;
         return;
@@ -111,4 +119,77 @@ void FileMultiTrie::DebugDumpFile(const std::string& file)
     }
 
     fclose(fp);
+}
+
+
+FileMultiTrie::FileMultiTrie(const std::string& file)
+{
+    // TODO handle IO errors
+
+    fp = fopen(file.c_str(), "rb");
+
+    if(!ValidHeader(fp))
+    {
+        // TODO Should throw an exception instead
+        std::cout << "Corrupt database: Invalid header" << std::endl;
+    }
+}
+
+FileMultiTrie::~FileMultiTrie()
+{
+    fclose(fp);
+}
+
+std::vector<DocId> FileMultiTrie::getDocIds(const UString& term) const
+{
+    // TODO handle IO errors and malformed files
+
+    fseek(fp, sizeof(FILE_HEADER), SEEK_SET);
+
+    UString::const_iterator t = term.begin();
+    while(t != term.end())
+    {
+        NumValuesHeader numValues;
+        fread(&numValues, sizeof(numValues), 1, fp);
+        fseek(fp, numValues * sizeof(ValueElem), SEEK_CUR);
+
+        NumChildrenHeader numChildren;
+        fread(&numChildren, sizeof(numChildren), 1, fp);
+
+        bool foundChild = false;
+        for(size_t i = 0; i < numChildren && !foundChild; ++i)
+        {
+            UChar c;
+            fread(&c, sizeof(c), 1, fp);
+            Offset offset;
+            fread(&offset, sizeof(offset), 1, fp);
+            if(c == *t)
+            {
+                ++t;
+                fseek(fp, offset, SEEK_CUR);
+                foundChild = true;
+            }
+        }
+        if(!foundChild)
+            return std::vector<DocId>();
+    }
+
+    NumValuesHeader numValues;
+    fread(&numValues, sizeof(numValues), 1, fp);
+    std::vector<DocId> result;
+    result.reserve(numValues);
+    for(size_t i = 0; i < numValues; ++i)
+    {
+        ValueElem v;
+        fread(&v, sizeof(v), 1, fp);
+        result.push_back(v);
+    }
+    return result;
+}
+
+std::vector<UString> FileMultiTrie::getTerms(const UString& prefix) const
+{
+    // TODO ...
+
+    return std::vector<UString>();
 }

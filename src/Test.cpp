@@ -24,4 +24,12 @@ int main()
 
     FileMultiTrie::WriteMultiTrie(trie, "test.trie");
     FileMultiTrie::DebugDumpFile("test.trie");
+
+    FileMultiTrie fileTrie("test.trie");
+
+    std::cout << std::endl;
+
+    std::cout << fileTrie.getDocIds(createUString("dog"))[0] << std::endl;
+    std::cout << fileTrie.getDocIds(createUString("dog"))[1] << std::endl;
+    std::cout << fileTrie.getDocIds(createUString("doggy"))[0] << std::endl;
 }

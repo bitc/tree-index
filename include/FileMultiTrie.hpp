@@ -4,12 +4,14 @@
 #include <string>
 #include <vector>
 
+#include <boost/utility.hpp>
+
 #include "Misc.hpp"
 #include "MultiTrie.hpp"
 
 // Looks up terms directly from the database file
 // Use WriteMultiTrie to create the database file
-class FileMultiTrie
+class FileMultiTrie : boost::noncopyable
 {
     public:
         static void WriteMultiTrie(const MultiTrie& multiTrie, const std::string& file);
@@ -27,6 +29,8 @@ class FileMultiTrie
         static size_t NodeBlockSize(const MultiTrie::Node& node);
         static void WriteNode(const MultiTrie::Node& node, FILE* fp);
 
+
+        FILE* fp;
 };
 
 #endif
